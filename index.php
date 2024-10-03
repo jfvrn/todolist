@@ -40,17 +40,26 @@ if (isset($_POST['action'])) {
      * Toggle a task (i.e. if it is done, undo it; if it is not done, mark it as done),
      * then redirect to the base URL.
      */
-    case 'toggle':
+      case 'toggle':
 
-      $id = $_POST['id'];
-      if(is_numeric($id)) {
-        $updateQuery = ''; // IMPLEMENT ME
-        if(!$db->query($updateQuery)) {
-          die(print_r($db->errorInfo(), true));
-        }
-      }
+          $id = $_POST['id'];
+          if(is_numeric($id)) {
+              // Fetch the current status of the task
+              $selectQuery = 'SELECT done FROM todo WHERE id = '.$id;
+              $currentStatus = $db->query($selectQuery)->fetch(PDO::FETCH_ASSOC)['done'];
 
-case 'toggle':
+              // Toggle the status (i.e., mark as done if not done, or undo if done)
+              $newStatus = $currentStatus ? 0 : 1;
+              $updateQuery = 'UPDATE todo SET done = '.$newStatus.' WHERE id = '.$id;
+
+              if(!$db->query($updateQuery)) {
+                  die(print_r($db->errorInfo(), true));
+              }
+          }
+
+          header('Location: '.BASE_URL);
+          die();
+   
 
   $id = $_POST['id'];
   if(is_numeric($id)) {
