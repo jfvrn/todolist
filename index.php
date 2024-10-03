@@ -94,8 +94,8 @@ case 'toggle':
 /**
  * Select all tasks from the database.
  */
-$selectQuery = ''; // IMPLEMENT ME
-$items = $db->query($selectQuery);
+$selectQuery = 'SELECT * FROM todo'; // IMPLEMENT ME
+$items = $db->query($selectQuery)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <html>
