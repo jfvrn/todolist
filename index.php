@@ -12,7 +12,7 @@ define('DB_USER', 'todolist');
 define('DB_PASS', 'change-me-now');
 define('DB_NAME', 'todolist');
 define('DB_HOST', '127.0.0.1');
-define('DB_PORT', '3306');
+define('DB_PORT', '8889');
 
 $db = new PDO('mysql:host='.DB_HOST.';port='.DB_PORT.';dbname='.DB_NAME, DB_USER, DB_PASS);
 $items = array();
@@ -50,7 +50,24 @@ if (isset($_POST['action'])) {
         }
       }
 
-      header('Location: '.BASE_URL);
+case 'toggle':
+
+  $id = $_POST['id'];
+  if(is_numeric($id)) {
+    // Fetch the current status of the task
+    $selectQuery = 'SELECT done FROM todo WHERE id = '.$id;
+    $currentStatus = $db->query($selectQuery)->fetch(PDO::FETCH_ASSOC)['done'];
+
+    // Toggle the status (i.e., mark as done if not done, or undo if done)
+    $newStatus = $currentStatus ? 0 : 1;
+    $updateQuery = 'UPDATE todo SET done = '.$newStatus.' WHERE id = '.$id;
+
+    if(!$db->query($updateQuery)) {
+      die(print_r($db->errorInfo(), true));
+    }
+  }
+
+        header('Location: '.BASE_URL);
       die();
 
     /**
